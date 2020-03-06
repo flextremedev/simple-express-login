@@ -25,6 +25,7 @@ export const makeExpressCallback = function makeExpressCallback(
     }
     if(response.headers){
       res.set(response.headers)
+      
     }
     res.send();
   };

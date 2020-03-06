@@ -6,9 +6,8 @@ type LoginParams = {
 }
 export const makeLoginController = function makeLogin(loginUseCase: () => Promise<string>){
     return async function loginController(httpRequest: HttpRequest): Promise<HttpResponse>{
-                
-                const sid = await loginUseCase();
-        return {statusCode: 200, headers:{"X-sid": sid}};
+        const sid = await loginUseCase();
+        return {statusCode: 200, headers:{"Content-Type": "text/html", "Access-Control-Allow-Origin": "*", "Set-Cookie": `sid=${sid}`}};
     }
 }
 
