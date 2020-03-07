@@ -19,14 +19,20 @@ export const makeExpressCallback = function makeExpressCallback(
         "User-Agent": req.get("User-Agent")
       }
     };
-    const response = await controller(httpRequest);
-    if(response.statusCode){
-      res.status(response.statusCode)
+    try{
+      const response = await controller(httpRequest);
+      if(response.statusCode){
+        res.status(response.statusCode)
+      }
+      if(response.headers){
+        res.set(response.headers)
+        
+      }
+      res.send();
     }
-    if(response.headers){
-      res.set(response.headers)
-      
+    catch(e){
+      console.log(e)
+      res.status(500).send(e);
     }
-    res.send();
   };
 };
