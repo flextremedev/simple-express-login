@@ -12,17 +12,19 @@ export type DBClient = {
     }: {
       username: string;
       password: string;
-    }) => Promise<boolean>;
+    }) => Promise<LoginDTO>;
   };
+};
+type LoginDTO = {
+  username: string;
+  password: string;
 };
 const mockDbClient: DBClient = {
   users: {
-    find: ({ username, password }): Promise<boolean> =>
+    find: ({ username }): Promise<LoginDTO> =>
       new Promise(res => {
-        const found = mockDb.users.some(
-          user => user.username === username && user.password === password
-        );
-        res(found);
+        const user = mockDb.users.find(user => user.username === username);
+        res(user);
       })
   }
 };

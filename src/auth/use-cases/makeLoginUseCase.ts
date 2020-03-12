@@ -20,8 +20,8 @@ export const makeLoginUseCase = function makeLoginUseCase({
     password
   }): Promise<string | undefined> {
     try {
-      const found = await db.users.find({ username, password });
-      if (found) {
+      const user = await db.users.find({ username, password });
+      if (user) {
         // TODO: save session id for future authentication
         return uuid();
       }
