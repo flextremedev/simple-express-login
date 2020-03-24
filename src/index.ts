@@ -1,5 +1,4 @@
 import express from "express";
-import { registerRoute } from "./utils/registerRoute";
 import { makeExpressCallback } from "./express-callback/makeExpressCallback";
 import { loginController } from "./auth/controllers/loginController";
 import bodyParser from "body-parser";
@@ -13,7 +12,7 @@ app.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
-registerRoute("/login", makeExpressCallback(loginController))(app);
+app.post("/login", makeExpressCallback(loginController));
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}...`);

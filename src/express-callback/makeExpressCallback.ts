@@ -32,7 +32,7 @@ export const makeExpressCallback = function makeExpressCallback(
     }
     catch(e){
       console.log(e)
-      res.status(500).send(e);
+      res.status(500).send({error: 'An unknown error occured.'});
     }
   };
 };

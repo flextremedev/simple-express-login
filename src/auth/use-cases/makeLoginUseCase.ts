@@ -1,7 +1,7 @@
-import { DBClient } from "./loginUseCase";
+import { UserRepository } from "../repositories/UserRepositoryFactory";
 
 type MakeLoginUseCaseParams = {
-  db: DBClient;
+  userRepository: UserRepository;
   uuid: () => string;
 };
 type LoginParams = {
@@ -12,7 +12,7 @@ export type LoginUseCase = (
   loginData: LoginParams
 ) => Promise<string | undefined>;
 export const makeLoginUseCase = function makeLoginUseCase({
-  db,
+  userRepository,
   uuid
 }: MakeLoginUseCaseParams): LoginUseCase {
   return async function loginUseCase({
@@ -20,15 +20,15 @@ export const makeLoginUseCase = function makeLoginUseCase({
     password
   }): Promise<string | undefined> {
     try {
-      const user = await db.users.find({ username, password });
-      if (user) {
+      const user = await userRepository.getByUsername(username);
+      if (user?.password === password) {
         // TODO: save session id for future authentication
         return uuid();
       }
       return;
     } catch (e) {
       console.log(e);
-      throw Error("Login failed!");
+      throw Error(e);
     }
   };
 };

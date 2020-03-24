@@ -13,20 +13,28 @@ export const makeLoginController = function makeLogin({
     try {
       const { body } = httpRequest;
       if (body) {
+        let response: HttpResponse = {};
+        let headers = {};
         const { username, password } = body;
+        if (!username) {
+          console.log("Invalid username");
+        }
+        if (!password) {
+          console.log("Invalid password");
+        }
         if (username && password) {
           const sid = await login({ username, password });
-          let response: HttpResponse = {};
-          let headers = {};
           if (sid) {
             headers = Object.assign(headers, { "Set-Cookie": `sid=${sid}` });
             response = Object.assign(response, { statusCode: 200 });
           } else {
             response = Object.assign(response, { statusCode: 401 });
           }
-          response = Object.assign(response, { headers });
-          return response;
+        } else {
+          response = Object.assign(response, { statusCode: 401 });
         }
+        response = Object.assign(response, { headers });
+        return response;
       }
       throw Error("Username or password not set!");
     } catch (e) {
