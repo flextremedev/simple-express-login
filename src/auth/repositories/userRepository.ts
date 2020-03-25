@@ -1,3 +1,3 @@
 import { UserRepository } from "./UserRepositoryFactory";
-import { makeDb } from "../../common/moin/makeDb";
+import { makeDb } from "../../common/db/makeDb";
 export const userRepository = UserRepository.create(makeDb);

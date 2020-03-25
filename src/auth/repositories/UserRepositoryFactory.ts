@@ -1,7 +1,6 @@
-import { Repository } from "../../common/models/Repository";
-import { MakeDb } from "../../common/moin/makeDb";
+import { MakeDb } from "../../common/db/makeDb";
 import { UserEntity } from "../entities/User";
-export class UserRepository implements Repository<UserEntity> {
+export class UserRepository {
   constructor(private makeDb: MakeDb) {}
   static create(makeDb: MakeDb): UserRepository {
     return new this(makeDb);
