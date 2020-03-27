@@ -1,15 +1,12 @@
-import { UserRepository } from "../repositories/UserRepositoryFactory";
+import { UserRepository } from "../../repositories/makeUserRepository";
+import { Credentials } from "../../types/Credentials";
 
 type MakeLoginUseCaseParams = {
   userRepository: UserRepository;
   uuid: () => string;
 };
-type LoginParams = {
-  username: string;
-  password: string;
-};
 export type LoginUseCase = (
-  loginData: LoginParams
+  credentials: Credentials
 ) => Promise<string | undefined>;
 export const makeLoginUseCase = function makeLoginUseCase({
   userRepository,
