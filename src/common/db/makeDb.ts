@@ -18,11 +18,20 @@ const mockDbClient: DBClient = {
   users: {
     insertOne: (userEntity: UserEntity): Promise<UserEntity | undefined> =>
       new Promise(res => {
-        mockDb.users = Object.assign(mockDb.users, {
-          [userEntity.id]: userEntity
-        });
-        console.log("Inserted", { userEntity, mockDb });
-        res(userEntity);
+        const usernameExists = Object.keys(mockDb.users).some(
+          userId => mockDb.users[userId].username === userEntity.username
+        );
+        if (!usernameExists) {
+          mockDb.users = Object.assign(mockDb.users, {
+            [userEntity.id]: userEntity
+          });
+          console.log("Inserted", { userEntity, mockDb });
+          res(userEntity);
+        } else {
+          console.log("Username already taken.");
+          // TODO: Specific error for better handling
+          res(undefined);
+        }
       }),
     findOne: (username): Promise<UserEntity | undefined> =>
       new Promise(res => {
