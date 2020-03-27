@@ -1,5 +1,4 @@
 import { UserEntity } from "../../user-management/entities/User";
-import { Credentials } from "../../user-management/types/Credentials";
 
 export type MakeDb = () => Promise<DBClient>;
 type Db = {
