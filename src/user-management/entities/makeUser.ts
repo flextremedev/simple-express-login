@@ -1,16 +1,25 @@
-import { UserEntity } from "./User";
 import { v4 as uuid } from "uuid";
+import { hash, genSalt } from "bcryptjs";
+import { UserEntity } from "./User";
 import { Credentials } from "../types/Credentials";
 type BuildMakeUserParams = {
   uuid: () => string;
+  hash: typeof hash;
+  genSalt: typeof genSalt;
 };
 export const buildMakeUser = function buildMakeUser({
-  uuid
+  uuid,
+  hash
 }: BuildMakeUserParams) {
-  return function makeUser({ username, password }: Credentials): UserEntity {
+  return async function makeUser({
+    username,
+    password
+  }: Credentials): Promise<UserEntity> {
     const id = uuid();
-    return Object.freeze({ id, username, password });
+    const salt = await genSalt(10);
+    const hashedPassword = await hash(password, salt);
+    return Object.freeze({ id, username, password: hashedPassword });
   };
 };
 
-export const makeUser = buildMakeUser({ uuid });
+export const makeUser = buildMakeUser({ uuid, hash, genSalt });

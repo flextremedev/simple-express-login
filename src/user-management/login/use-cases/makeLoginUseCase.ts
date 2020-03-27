@@ -1,9 +1,11 @@
 import { UserRepository } from "../../repositories/makeUserRepository";
 import { Credentials } from "../../types/Credentials";
+import { compare } from "bcryptjs";
 
 type MakeLoginUseCaseParams = {
   userRepository: UserRepository;
   uuid: () => string;
+  compare: typeof compare;
 };
 export type LoginUseCase = (
   credentials: Credentials
@@ -18,9 +20,12 @@ export const makeLoginUseCase = function makeLoginUseCase({
   }): Promise<string | undefined> {
     try {
       const user = await userRepository.getByUsername(username);
-      if (user?.password === password) {
-        // TODO: save session id for future authentication
-        return uuid();
+      if (user) {
+        const passwordMatched = await compare(password, user.password);
+        if (passwordMatched) {
+          // TODO: save session id for future authentication
+          return uuid();
+        }
       }
       return;
     } catch (e) {

@@ -18,7 +18,7 @@ export const makeRegistrationUseCase = ({
     username,
     password
   }: Credentials): Promise<string | undefined> {
-    const user = makeUser({ username, password });
+    const user = await makeUser({ username, password });
     const maybeCreatedUser = await userRepository.createUser(user);
     if (maybeCreatedUser) {
       const sid = uuid();
