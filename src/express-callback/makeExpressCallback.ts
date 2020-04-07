@@ -28,7 +28,12 @@ export const makeExpressCallback = function makeExpressCallback(
         res.set(response.headers)
         
       }
-      res.send();
+      if(response.body){
+        res.json(response.body)
+      }
+      else{
+        res.send();
+      }
     }
     catch(e){
       console.log(e)

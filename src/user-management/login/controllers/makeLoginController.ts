@@ -1,11 +1,12 @@
 import { HttpRequest } from "src/types/HttpRequest";
 import { HttpResponse } from "src/types/HttpResponse";
 import { LoginUseCase } from "../use-cases/makeLoginUseCase";
+import { response } from "express";
 type MakeLoginParams = {
   login: LoginUseCase;
 };
 export const makeLoginController = function makeLogin({
-  login
+  login,
 }: MakeLoginParams) {
   return async function loginController(
     httpRequest: HttpRequest
@@ -13,7 +14,7 @@ export const makeLoginController = function makeLogin({
     try {
       const { body } = httpRequest;
       if (body) {
-        let response: HttpResponse = {};
+        const response: HttpResponse = {};
         let headers = {};
         const { username, password } = body;
         if (!username) {
@@ -23,22 +24,28 @@ export const makeLoginController = function makeLogin({
           console.log("Invalid password");
         }
         if (username && password) {
-          const sid = await login({ username, password });
-          if (sid) {
+          const valueOrError = await login({ username, password });
+          if (valueOrError.isSuccess()) {
+            const sid = valueOrError.value;
             headers = Object.assign(headers, { "Set-Cookie": `sid=${sid}` });
-            response = Object.assign(response, { statusCode: 200 });
+            response.statusCode = 200;
           } else {
-            response = Object.assign(response, { statusCode: 401 });
+            const error = valueOrError.value;
+            response.statusCode = error.status || 401;
+            response.body = error;
           }
         } else {
-          response = Object.assign(response, { statusCode: 401 });
+          response.statusCode = 401;
         }
-        response = Object.assign(response, { headers });
+        response.headers = headers;
+        return response;
+      } else {
+        response.statusCode = 400;
         return response;
       }
-      throw Error("Username or password not set!");
     } catch (e) {
-      throw new Error(e);
+      response.statusCode = 500;
+      return response;
     }
   };
 };

@@ -1,6 +1,6 @@
 type HttpResponseHeaders = any;
 type HttpResponseBody = {
-  [key: string]: string;
+  [key: string]: string | number;
 };
 export type HttpResponse = {
   body?: HttpResponseBody;
