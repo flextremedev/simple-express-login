@@ -1,10 +1,10 @@
 import { compare } from "bcryptjs";
 import { UserRepository } from "../../repositories/makeUserRepository";
 import { Credentials } from "../../types/Credentials";
-import { Result } from "../../../types/Result";
-import { LoginError, LoginErrorType } from "../../errors/LoginError";
-import { succeed } from "../../../utils/succeed";
-import { fail } from "../../../utils/fail";
+import { LoginError } from "../errors/LoginError";
+import { succeed } from "../../../common/utils/succeed";
+import { fail } from "../../../common/utils/fail";
+import { Result } from "../../../common/types/Result";
 
 type MakeLoginUseCaseParams = {
   userRepository: UserRepository;
@@ -13,7 +13,7 @@ type MakeLoginUseCaseParams = {
 };
 export type LoginUseCase = (
   credentials: Credentials
-) => Promise<Result<LoginErrorType, string>>;
+) => Promise<Result<LoginError, string>>;
 export const makeLoginUseCase = function makeLoginUseCase({
   userRepository,
   uuid,
@@ -21,7 +21,7 @@ export const makeLoginUseCase = function makeLoginUseCase({
   return async function loginUseCase({
     username,
     password,
-  }): Promise<Result<LoginErrorType, string>> {
+  }): Promise<Result<LoginError, string>> {
     try {
       const user = await userRepository.getByUsername(username);
       if (user) {
@@ -31,7 +31,7 @@ export const makeLoginUseCase = function makeLoginUseCase({
           return succeed(uuid());
         }
       }
-      return fail(LoginError);
+      return fail(LoginError.create());
     } catch (e) {
       console.log(e);
       throw Error(e);

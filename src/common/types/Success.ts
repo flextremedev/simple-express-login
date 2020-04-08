@@ -1,17 +1,21 @@
 import { Failure } from "./Failure";
 
 export class Success<E, V> {
-  readonly value: V;
+  private value: V;
 
   constructor(value: V) {
     this.value = value;
   }
 
-  isFailure(): this is Failure<E, V> {
+  public isFailure(): this is Failure<E, V> {
     return false;
   }
 
-  isSuccess(): this is Success<E, V> {
+  public isSuccess(): this is Success<E, V> {
     return true;
+  }
+
+  public getValue(): V {
+    return this.value;
   }
 }

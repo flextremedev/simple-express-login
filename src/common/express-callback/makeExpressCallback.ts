@@ -1,6 +1,6 @@
 import { Request, Response, RequestHandler } from "express";
-import type { HttpRequest } from "src/types/HttpRequest";
-import { HttpResponse } from "src/types/HttpResponse";
+import type { HttpRequest } from "src/common/types/HttpRequest";
+import { HttpResponse } from "src/common/types/HttpResponse";
 
 export const makeExpressCallback = function makeExpressCallback(
   controller: (httpRequest: HttpRequest) => Promise<HttpResponse>

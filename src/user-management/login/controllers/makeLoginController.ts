@@ -1,5 +1,5 @@
-import { HttpRequest } from "src/types/HttpRequest";
-import { HttpResponse } from "src/types/HttpResponse";
+import { HttpRequest } from "src/common/types/HttpRequest";
+import { HttpResponse } from "src/common/types/HttpResponse";
 import { LoginUseCase } from "../use-cases/makeLoginUseCase";
 import { response } from "express";
 type MakeLoginParams = {
@@ -26,13 +26,13 @@ export const makeLoginController = function makeLogin({
         if (username && password) {
           const valueOrError = await login({ username, password });
           if (valueOrError.isSuccess()) {
-            const sid = valueOrError.value;
+            const sid = valueOrError.getValue();
             headers = Object.assign(headers, { "Set-Cookie": `sid=${sid}` });
             response.statusCode = 200;
           } else {
-            const error = valueOrError.value;
+            const error = valueOrError.getValue();
             response.statusCode = error.status || 401;
-            response.body = error;
+            response.body = error.toJS();
           }
         } else {
           response.statusCode = 401;

@@ -1,12 +1,12 @@
 import { RegistrationUseCase } from "../use-cases/makeRegistrationUseCase";
-import { HttpRequest } from "../../../types/HttpRequest";
-import { HttpResponse } from "../../../types/HttpResponse";
+import { HttpRequest } from "../../../common/types/HttpRequest";
+import { HttpResponse } from "../../../common/types/HttpResponse";
 
 type MakeRegistrationControllerParams = {
   registrationUseCase: RegistrationUseCase;
 };
 export const makeRegistrationController = ({
-  registrationUseCase
+  registrationUseCase,
 }: MakeRegistrationControllerParams) => {
   return async function registrationController(
     req: HttpRequest
