@@ -12,5 +12,5 @@ export type HttpRequest = {
   method: Request["method"];
   path: Request["path"];
   headers: HttpRequestHeaders;
-  session?: { [key: string]: string };
+  session?: { [key: string]: unknown };
 };

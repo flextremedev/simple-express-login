@@ -5,7 +5,13 @@ type Db = {
   users: { [key: string]: UserEntity };
 };
 const mockDb: Db = {
-  users: {}
+  users: {
+    1: {
+      id: "1",
+      username: "te",
+      password: "$2a$10$qmuM0r5v2lPwXnifZX/abugN2q5hz0YlmOqJLZF2.fasg2XbG8g/y",
+    },
+  },
 };
 export type DBClient = {
   users: {
@@ -16,13 +22,13 @@ export type DBClient = {
 const mockDbClient: DBClient = {
   users: {
     insertOne: (userEntity: UserEntity): Promise<UserEntity | undefined> =>
-      new Promise(res => {
+      new Promise((res) => {
         const usernameExists = Object.keys(mockDb.users).some(
-          userId => mockDb.users[userId].username === userEntity.username
+          (userId) => mockDb.users[userId].username === userEntity.username
         );
         if (!usernameExists) {
           mockDb.users = Object.assign(mockDb.users, {
-            [userEntity.id]: userEntity
+            [userEntity.id]: userEntity,
           });
           console.log("Inserted", { userEntity, mockDb });
           res(userEntity);
@@ -33,15 +39,15 @@ const mockDbClient: DBClient = {
         }
       }),
     findOne: (username): Promise<UserEntity | undefined> =>
-      new Promise(res => {
+      new Promise((res) => {
         const user = Object.keys(mockDb.users).find(
-          userId => mockDb.users[userId].username === username
+          (userId) => mockDb.users[userId].username === username
         );
         if (user) {
           res(mockDb.users[user]);
         }
         res(undefined);
-      })
-  }
+      }),
+  },
 };
-export const makeDb: MakeDb = () => new Promise(res => res(mockDbClient));
+export const makeDb: MakeDb = () => new Promise((res) => res(mockDbClient));

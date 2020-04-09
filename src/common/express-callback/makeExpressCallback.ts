@@ -6,7 +6,6 @@ export const makeExpressCallback = function makeExpressCallback(
   controller: (httpRequest: HttpRequest) => Promise<HttpResponse>
 ): RequestHandler {
   return async function expressCallback(req: Request, res: Response): Promise<void> {
-    console.log(req.session)
     const httpRequest: HttpRequest = {
       body: req.body,
       session: req.session,

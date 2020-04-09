@@ -9,13 +9,14 @@ export const makeLoginController = function makeLogin({
   login,
 }: MakeLoginParams) {
   return async function loginController(
-    httpRequest: HttpRequest
+    req: HttpRequest
   ): Promise<HttpResponse> {
+    console.log(req.session);
     try {
-      const { body } = httpRequest;
+      const { body } = req;
       if (body) {
         const response: HttpResponse = {};
-        let headers = {};
+        const headers = {};
         const { username, password } = body;
         if (!username) {
           console.log("Invalid username");
@@ -24,13 +25,15 @@ export const makeLoginController = function makeLogin({
           console.log("Invalid password");
         }
         if (username && password) {
-          const valueOrError = await login({ username, password });
-          if (valueOrError.isSuccess()) {
-            const sid = valueOrError.getValue();
-            headers = Object.assign(headers, { "Set-Cookie": `sid=${sid}` });
+          const maybeUser = await login({ username, password });
+          if (maybeUser.isSuccess()) {
+            const user = maybeUser.getValue();
+            if (req.session) {
+              req.session.userId = user.id;
+            }
             response.statusCode = 200;
           } else {
-            const error = valueOrError.getValue();
+            const error = maybeUser.getValue();
             response.statusCode = error.status || 401;
             response.body = error.toJS();
           }

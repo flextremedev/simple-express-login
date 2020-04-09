@@ -12,7 +12,7 @@ export const makeUserRepository = (makeDb: MakeDb): UserRepository => {
     const user = db.users.findOne(username);
     return user;
   };
-  const createUser = async function createUser(userEntity: UserEntity): Promise<UserEntity |undefined> {
+  const createUser = async function createUser(userEntity: UserEntity): Promise<UserEntity | undefined> {
     const db = await makeDb();
     const user = db.users.insertOne(userEntity);
     return user;

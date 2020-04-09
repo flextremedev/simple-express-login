@@ -1,29 +1,31 @@
 import { UserRepository } from "../../repositories/makeUserRepository";
 import { Credentials } from "../../types/Credentials";
 import { makeUser } from "../../entities/makeUser";
+import { Result } from "../../../common/types/Result";
+import { RegistrationError } from "../errors/RegistrationError";
+import { UserEntity } from "../../entities/User";
+import { succeed } from "../../../common/utils/succeed";
+import { fail } from "../../../common/utils/fail";
 
 type MakeRegistrationUseCaseParams = {
   userRepository: UserRepository;
-  uuid: () => string;
 };
 export type RegistrationUseCase = ({
   username,
-  password
-}: Credentials) => Promise<string | undefined>;
+  password,
+}: Credentials) => Promise<Result<RegistrationError, UserEntity>>;
 export const makeRegistrationUseCase = ({
   userRepository,
-  uuid
 }: MakeRegistrationUseCaseParams): RegistrationUseCase => {
   return async function registrationUseCase({
     username,
-    password
-  }: Credentials): Promise<string | undefined> {
+    password,
+  }: Credentials): Promise<Result<RegistrationError, UserEntity>> {
     const user = await makeUser({ username, password });
     const maybeCreatedUser = await userRepository.createUser(user);
     if (maybeCreatedUser) {
-      const sid = uuid();
-      return sid;
+      return succeed(maybeCreatedUser);
     }
-    return maybeCreatedUser;
+    return fail(RegistrationError.create());
   };
 };

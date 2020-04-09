@@ -1,6 +1,7 @@
 import { RegistrationUseCase } from "../use-cases/makeRegistrationUseCase";
 import { HttpRequest } from "../../../common/types/HttpRequest";
 import { HttpResponse } from "../../../common/types/HttpResponse";
+import { response } from "express";
 
 type MakeRegistrationControllerParams = {
   registrationUseCase: RegistrationUseCase;
@@ -14,8 +15,8 @@ export const makeRegistrationController = ({
     try {
       const { body } = req;
       if (body) {
-        let response: HttpResponse = {};
-        let headers = {};
+        const response: HttpResponse = {};
+        const headers = {};
         const { username, password } = body;
         if (!username) {
           console.log("Username not set.");
@@ -24,20 +25,26 @@ export const makeRegistrationController = ({
           console.log("Password not set.");
         }
         if (username && password) {
-          const sid = await registrationUseCase({ username, password });
-          if (sid) {
-            headers = Object.assign(headers, { "Set-Cookie": `sid=${sid}` });
-            response = Object.assign(response, { statusCode: 201 });
+          const maybeUser = await registrationUseCase({ username, password });
+          if (maybeUser.isSuccess()) {
+            const user = maybeUser.getValue();
+            if (req.session) {
+              req.session.userId = user.id;
+            }
+            response.statusCode = 201;
           } else {
-            response = Object.assign(response, { statusCode: 500 });
+            const error = maybeUser.getValue();
+            response.statusCode = error.status || 500;
+            response.body = error.toJS();
           }
         } else {
-          response = Object.assign(response, { statusCode: 400 });
+          response.statusCode = 400;
         }
-        response = Object.assign(response, { headers });
+        response.headers = headers;
         return response;
       }
-      throw Error("Bad request.");
+      response.statusCode = 400;
+      return response;
     } catch (e) {
       throw new Error(e);
     }
