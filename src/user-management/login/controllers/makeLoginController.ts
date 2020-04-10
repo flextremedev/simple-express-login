@@ -33,6 +33,7 @@ export const makeLoginController = function makeLogin({
               req.session.userId = user.id;
               const { originalMaxAge } = req.session?.cookie;
               if (originalMaxAge) {
+                // TODO: expiresIn => expires
                 response.body = { expiresIn: originalMaxAge, id: user.id };
               }
             }
