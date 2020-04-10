@@ -24,19 +24,19 @@ app.use(
   bodyParser.json(),
   cors({
     origin: "http://localhost:3000",
-    credentials: true,
+    credentials: true
   }),
   session({
     name: "sid",
     secret: "secret",
     cookie: {
-      maxAge: 360000,
+      maxAge: 1000 * 10,
       sameSite: "none",
       secure: false,
-      httpOnly: false,
+      httpOnly: false
     },
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: false
   })
 );
 app.get("/", protectedRoute, (req: Request, res: Response) => {

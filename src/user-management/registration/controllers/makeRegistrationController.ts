@@ -2,12 +2,13 @@ import { RegistrationUseCase } from "../use-cases/makeRegistrationUseCase";
 import { HttpRequest } from "../../../common/types/HttpRequest";
 import { HttpResponse } from "../../../common/types/HttpResponse";
 import { response } from "express";
+import { RegistrationError } from "../errors/RegistrationError";
 
 type MakeRegistrationControllerParams = {
   registrationUseCase: RegistrationUseCase;
 };
 export const makeRegistrationController = ({
-  registrationUseCase,
+  registrationUseCase
 }: MakeRegistrationControllerParams) => {
   return async function registrationController(
     req: HttpRequest
@@ -30,15 +31,21 @@ export const makeRegistrationController = ({
             const user = maybeUser.getValue();
             if (req.session) {
               req.session.userId = user.id;
+              const { originalMaxAge } = req.session?.cookie;
+              if (originalMaxAge) {
+                response.body = { expiresIn: originalMaxAge, id: user.id };
+              }
             }
             response.statusCode = 201;
           } else {
             const error = maybeUser.getValue();
-            response.statusCode = error.status || 500;
+            response.statusCode = error.status;
             response.body = error.toJS();
           }
         } else {
-          response.statusCode = 400;
+          const err = RegistrationError.create();
+          response.statusCode = err.status;
+          response.body = err.toJS();
         }
         response.headers = headers;
         return response;
