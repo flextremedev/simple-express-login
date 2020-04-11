@@ -12,7 +12,6 @@ export const makeLoginController = function makeLogin({
   return async function loginController(
     req: HttpRequest
   ): Promise<HttpResponse> {
-    console.log(req.session);
     try {
       const { body } = req;
       if (body) {

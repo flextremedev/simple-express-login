@@ -29,6 +29,9 @@ export const makeExpressCallback = function makeExpressCallback(
         res.set(response.headers)
         
       }
+      if(!req.session){
+        res.clearCookie('sid');
+      }
       if(response.body){
         res.json(response.body)
       }

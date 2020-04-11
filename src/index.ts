@@ -5,6 +5,7 @@ import session from "express-session";
 import { makeExpressCallback } from "./common/express-callback/makeExpressCallback";
 import { loginController } from "./user-management/login/controllers/loginController";
 import { registrationController } from "./user-management/registration/controllers/registrationController";
+import { logoutController } from "./user-management/logout/controllers/logoutController";
 const app = express();
 const port = 8080;
 const protectedRoute = (
@@ -30,7 +31,7 @@ app.use(
     name: "sid",
     secret: "secret",
     cookie: {
-      maxAge: 1000 * 10,
+      maxAge: 1000 * 60,
       sameSite: "none",
       secure: false,
       httpOnly: false
@@ -44,6 +45,7 @@ app.get("/", protectedRoute, (req: Request, res: Response) => {
 });
 app.post("/login", makeExpressCallback(loginController));
 app.post("/register", makeExpressCallback(registrationController));
+app.post("/logout", makeExpressCallback(logoutController));
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}...`);
