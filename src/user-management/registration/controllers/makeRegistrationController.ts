@@ -33,7 +33,8 @@ export const makeRegistrationController = ({
               req.session.userId = user.id;
               const { originalMaxAge } = req.session?.cookie;
               if (originalMaxAge) {
-                response.body = { expiresIn: originalMaxAge, id: user.id };
+                const expires = originalMaxAge * 1000 + new Date().getTime();
+                response.body = { expires, id: user.id };
               }
             }
             response.statusCode = 201;
