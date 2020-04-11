@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import session from "express-session";
@@ -6,21 +6,10 @@ import { makeExpressCallback } from "./common/express-callback/makeExpressCallba
 import { loginController } from "./user-management/login/controllers/loginController";
 import { registrationController } from "./user-management/registration/controllers/registrationController";
 import { logoutController } from "./user-management/logout/controllers/logoutController";
+import { protectedRoute } from "./common/express-middleware/protectedRoute";
 const app = express();
 const port = 8080;
-const protectedRoute = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  if (req.session?.userId) {
-    console.log("Authenticated");
-    next();
-  } else {
-    console.log("Unauthenticated");
-    res.status(401).end();
-  }
-};
+
 app.use(
   bodyParser.json(),
   cors({
