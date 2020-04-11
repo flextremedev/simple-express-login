@@ -34,7 +34,7 @@ app.use(
       maxAge: 1000 * 60,
       sameSite: "none",
       secure: false,
-      httpOnly: false
+      httpOnly: true
     },
     resave: false,
     saveUninitialized: false
