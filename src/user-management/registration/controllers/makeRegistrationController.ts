@@ -3,6 +3,7 @@ import { HttpRequest } from "../../../common/types/HttpRequest";
 import { HttpResponse } from "../../../common/types/HttpResponse";
 import { response } from "express";
 import { RegistrationError } from "../errors/RegistrationError";
+import { getExpirationByDuration } from "../../../common/utils/getExpirationByDuration";
 
 type MakeRegistrationControllerParams = {
   registrationUseCase: RegistrationUseCase;
@@ -33,7 +34,7 @@ export const makeRegistrationController = ({
               req.session.userId = user.id;
               const { originalMaxAge } = req.session?.cookie;
               if (originalMaxAge) {
-                const expires = originalMaxAge * 1000 + new Date().getTime();
+                const expires = getExpirationByDuration(originalMaxAge);
                 response.body = { expires, id: user.id };
               }
             }

@@ -3,6 +3,7 @@ import { HttpResponse } from "src/common/types/HttpResponse";
 import { LoginUseCase } from "../use-cases/makeLoginUseCase";
 import { response } from "express";
 import { LoginError } from "../errors/LoginError";
+import { getExpirationByDuration } from "../../../common/utils/getExpirationByDuration";
 type MakeLoginParams = {
   login: LoginUseCase;
 };
@@ -32,7 +33,7 @@ export const makeLoginController = function makeLogin({
               req.session.userId = user.id;
               const { originalMaxAge } = req.session?.cookie;
               if (originalMaxAge) {
-                const expires = originalMaxAge * 1000 + new Date().getTime();
+                const expires = getExpirationByDuration(originalMaxAge);
                 response.body = { expires, id: user.id };
               }
             }
