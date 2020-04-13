@@ -32,12 +32,10 @@ export const makeExpressCallback = function makeExpressCallback(
       if(!req.session){
         res.clearCookie('sid');
       }
-      if(response.body){
-        res.json(response.body)
+      if(!response.body){
+        response.body = {};
       }
-      else{
-        res.send();
-      }
+      res.json(response.body)
     }
     catch(e){
       console.log(e)
