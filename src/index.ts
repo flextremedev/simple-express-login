@@ -7,7 +7,6 @@ import { loginController } from "./user-management/login/controllers/loginContro
 import { registrationController } from "./user-management/registration/controllers/registrationController";
 import { logoutController } from "./user-management/logout/controllers/logoutController";
 import { protectedRoute } from "./common/express-middleware/protectedRoute";
-import { getExpirationByDuration } from "./common/utils/getExpirationByDuration";
 import { isAuthenticatedController } from "./user-management/isAuthenticated/use-cases/isAuthenticatedController";
 const app = express();
 const port = 8080;
