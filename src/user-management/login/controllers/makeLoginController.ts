@@ -5,10 +5,10 @@ import { response } from "express";
 import { LoginError } from "../errors/LoginError";
 import { getExpirationByDuration } from "../../../common/utils/getExpirationByDuration";
 type MakeLoginParams = {
-  login: LoginUseCase;
+  loginUseCase: LoginUseCase;
 };
 export const makeLoginController = function makeLogin({
-  login
+  loginUseCase
 }: MakeLoginParams) {
   return async function loginController(
     req: HttpRequest
@@ -26,7 +26,7 @@ export const makeLoginController = function makeLogin({
           console.log("Invalid password");
         }
         if (username && password) {
-          const maybeUser = await login({ username, password });
+          const maybeUser = await loginUseCase({ username, password });
           if (maybeUser.isSuccess()) {
             const user = maybeUser.getValue();
             if (req.session) {

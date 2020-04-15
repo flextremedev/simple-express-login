@@ -2,4 +2,4 @@ import { makeLoginUseCase } from "./makeLoginUseCase";
 import { userRepository } from "../../repositories/userRepository";
 import { compare } from "bcryptjs";
 
-export const login = makeLoginUseCase({ userRepository, compare });
+export const loginUseCase = makeLoginUseCase({ userRepository, compare });
