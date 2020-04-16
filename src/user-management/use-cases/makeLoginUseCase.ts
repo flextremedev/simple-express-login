@@ -1,10 +1,10 @@
-import { UserRepository } from "../../repositories/makeUserRepository";
-import { Credentials } from "../../types/Credentials";
+import { UserRepository } from "../repositories/makeUserRepository";
+import { Credentials } from "../types/Credentials";
+import { Result } from "../../common/types/Result";
 import { LoginError } from "../errors/LoginError";
-import { succeed } from "../../../common/utils/succeed";
-import { fail } from "../../../common/utils/fail";
-import { Result } from "../../../common/types/Result";
-import { UserEntity } from "../../entities/User";
+import { UserEntity } from "../entities/User";
+import { succeed } from "../../common/utils/succeed";
+import { fail } from "../../common/utils/fail";
 
 type MakeLoginUseCaseParams = {
   userRepository: UserRepository;

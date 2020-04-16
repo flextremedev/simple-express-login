@@ -4,25 +4,25 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import session from "express-session";
 import graphqlHTTP from "express-graphql";
-import { makeExpressCallback } from "./common/express-callback/makeExpressCallback";
-import { loginController } from "./user-management/login/controllers/loginController";
-import { registrationController } from "./user-management/registration/controllers/registrationController";
-import { logoutController } from "./user-management/logout/controllers/logoutController";
-import { isAuthenticatedController } from "./user-management/isAuthenticated/use-cases/isAuthenticatedController";
 import { buildSchema } from "type-graphql";
+import { makeExpressCallback } from "./common/express-callback/makeExpressCallback";
 import { PingResolver } from "./common/resolvers/PingResolver";
-import { LoginResolver } from "./user-management/login/resolvers/LoginResolver";
+import { LoginResolver } from "./user-management/resolvers/LoginResolver";
+import { loginController } from "./user-management/controllers/loginController";
+import { registrationController } from "./user-management/controllers/registrationController";
+import { logoutController } from "./user-management/controllers/logoutController";
+import { isAuthenticatedController } from "./user-management/use-cases/isAuthenticatedController";
 const main = async (): Promise<void> => {
   const app = express();
   const port = 8080;
   const schema = await buildSchema({
-    resolvers: [PingResolver, LoginResolver]
+    resolvers: [PingResolver, LoginResolver],
   });
   app.use(
     bodyParser.json(),
     cors({
       origin: "http://localhost:3000",
-      credentials: true
+      credentials: true,
     }),
     session({
       name: "sid",
@@ -31,17 +31,17 @@ const main = async (): Promise<void> => {
         maxAge: 1000 * 60,
         sameSite: "none",
         secure: false,
-        httpOnly: true
+        httpOnly: true,
       },
       resave: false,
-      saveUninitialized: false
+      saveUninitialized: false,
     })
   );
   app.use(
     "/graphql",
     graphqlHTTP({
       schema,
-      graphiql: true
+      graphiql: true,
     })
   );
   app.post("/login", makeExpressCallback(loginController));

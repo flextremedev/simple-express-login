@@ -3,12 +3,12 @@ import { HttpResponse } from "src/common/types/HttpResponse";
 import { LoginUseCase } from "../use-cases/makeLoginUseCase";
 import { response } from "express";
 import { LoginError } from "../errors/LoginError";
-import { getExpirationByDuration } from "../../../common/utils/getExpirationByDuration";
+import { getExpirationByDuration } from "../../common/utils/getExpirationByDuration";
 type MakeLoginParams = {
   loginUseCase: LoginUseCase;
 };
 export const makeLoginController = function makeLogin({
-  loginUseCase
+  loginUseCase,
 }: MakeLoginParams) {
   return async function loginController(
     req: HttpRequest

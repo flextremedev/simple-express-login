@@ -1,15 +1,15 @@
 import { RegistrationUseCase } from "../use-cases/makeRegistrationUseCase";
-import { HttpRequest } from "../../../common/types/HttpRequest";
-import { HttpResponse } from "../../../common/types/HttpResponse";
 import { response } from "express";
 import { RegistrationError } from "../errors/RegistrationError";
-import { getExpirationByDuration } from "../../../common/utils/getExpirationByDuration";
+import { HttpRequest } from "../../common/types/HttpRequest";
+import { HttpResponse } from "../../common/types/HttpResponse";
+import { getExpirationByDuration } from "../../common/utils/getExpirationByDuration";
 
 type MakeRegistrationControllerParams = {
   registrationUseCase: RegistrationUseCase;
 };
 export const makeRegistrationController = ({
-  registrationUseCase
+  registrationUseCase,
 }: MakeRegistrationControllerParams) => {
   return async function registrationController(
     req: HttpRequest

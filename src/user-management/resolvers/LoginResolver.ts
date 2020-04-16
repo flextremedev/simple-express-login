@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Arg } from "type-graphql";
-import { makeUser } from "../../entities/makeUser";
+import { makeUser } from "../entities/makeUser";
 @Resolver()
 export class LoginResolver {
   @Mutation(() => String)

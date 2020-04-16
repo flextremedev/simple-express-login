@@ -1,4 +1,4 @@
-import { AppError } from "../../../common/types/AppError";
+import { AppError } from "../../common/types/AppError";
 
 export class LoginError extends AppError {
   private constructor() {
