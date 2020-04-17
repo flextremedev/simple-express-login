@@ -4,19 +4,22 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import session from "express-session";
 import graphqlHTTP from "express-graphql";
-import { buildSchema } from "type-graphql";
+import { makeExecutableSchema } from "graphql-tools";
 import { makeExpressCallback } from "./common/express-callback/makeExpressCallback";
 import { PingResolver } from "./common/resolvers/PingResolver";
-import { LoginResolver } from "./user-management/resolvers/LoginResolver";
 import { loginController } from "./user-management/controllers/loginController";
 import { registrationController } from "./user-management/controllers/registrationController";
 import { logoutController } from "./user-management/controllers/logoutController";
 import { isAuthenticatedController } from "./user-management/use-cases/isAuthenticatedController";
+import { commonSchema } from "./common/schema";
 const main = async (): Promise<void> => {
   const app = express();
   const port = 8080;
-  const schema = await buildSchema({
-    resolvers: [PingResolver, LoginResolver],
+  const schema = makeExecutableSchema({
+    typeDefs: `
+    ${commonSchema}
+    `,
+    resolvers: [PingResolver],
   });
   app.use(
     bodyParser.json(),

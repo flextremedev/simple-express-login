@@ -34,8 +34,8 @@
     "express-graphql": "^0.9.0",
     "express-session": "^1.17.0",
     "graphql": "14",
+    "graphql-tools": "^5.0.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^0.17.6",
     "uuid": "^7.0.2"
   }
 }

@@ -1,9 +1,7 @@
-import { Resolver, Query } from "type-graphql";
-
-@Resolver()
-export class PingResolver {
-  @Query(() => String)
-  ping(): string {
-    return "pong";
-  }
-}
+export const PingResolver = {
+  Query: {
+    ping(): string {
+      return "Pong";
+    },
+  },
+};
