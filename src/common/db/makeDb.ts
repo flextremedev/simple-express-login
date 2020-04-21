@@ -50,4 +50,4 @@ const mockDbClient: DBClient = {
       }),
   },
 };
-export const makeDb: MakeDb = () => new Promise((res) => res(mockDbClient));
+export const makeDb: MakeDb = () => Promise.resolve(mockDbClient);
