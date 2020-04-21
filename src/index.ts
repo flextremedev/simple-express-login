@@ -9,8 +9,8 @@ import { PingResolver } from "./common/resolvers/PingResolver";
 import { loginController } from "./user-management/controllers/loginController";
 import { registrationController } from "./user-management/controllers/registrationController";
 import { logoutController } from "./user-management/controllers/logoutController";
-import { isAuthenticatedController } from "./user-management/use-cases/isAuthenticatedController";
 import { commonSchema } from "./common/schema";
+import { isAuthenticatedController } from "./user-management/controllers/isAuthenticatedController";
 const main = async (): Promise<void> => {
   const app = express();
   const port = 8080;
