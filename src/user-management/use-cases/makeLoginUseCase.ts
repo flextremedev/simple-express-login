@@ -5,10 +5,11 @@ import { LoginError } from "../errors/LoginError";
 import { UserEntity } from "../entities/User";
 import { succeed } from "../../common/utils/succeed";
 import { fail } from "../../common/utils/fail";
+import { Compare } from "../adapters/compare";
 
 type MakeLoginUseCaseParams = {
   userRepository: UserRepository;
-  compare: (s: string, hash: string) => Promise<boolean>;
+  compare: Compare;
 };
 export type LoginUseCase = (
   credentials: Credentials
