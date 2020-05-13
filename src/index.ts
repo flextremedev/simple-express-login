@@ -38,24 +38,6 @@ const main = async (): Promise<void> => {
     })
   );
   app.use(
-    cors({
-      origin: "http://localhost:3000",
-      credentials: true,
-      maxAge: 10886400,
-    }),
-    helmet.hsts({
-      maxAge: 10886400,
-      includeSubDomains: true,
-      preload: true,
-    }),
-    helmet.frameguard({
-      action: "deny",
-    }),
-    helmet.referrerPolicy({
-      policy: "no-referrer",
-    }),
-    helmet.hidePoweredBy(),
-    helmet.xssFilter(),
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'none'"],
@@ -69,7 +51,20 @@ const main = async (): Promise<void> => {
       setAllHeaders: false,
       reportOnly: true,
       browserSniff: false,
-    })
+    }),
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    }),
+    helmet.hsts(),
+    helmet.frameguard({
+      action: "deny",
+    }),
+    helmet.referrerPolicy({
+      policy: "no-referrer",
+    }),
+    helmet.hidePoweredBy(),
+    helmet.xssFilter()
   );
   app.use(express.static("build"));
   app.get("/", function(req, res) {
@@ -86,7 +81,9 @@ const main = async (): Promise<void> => {
   app.post("/register", makeExpressCallback(registrationController));
   app.post("/logout", makeExpressCallback(logoutController));
   app.get("/isAuthenticated", makeExpressCallback(isAuthenticatedController));
-
+  app.get("/redirect", (req, res) => {
+    res.redirect(301, `http://localhost:${port}`);
+  });
   app.listen(port, () => {
     console.log(`Server listening on port ${port}...`);
   });
