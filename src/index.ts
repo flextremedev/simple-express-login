@@ -1,8 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
+import path from "path";
 import cors from "cors";
 import session from "express-session";
 import graphqlHTTP from "express-graphql";
+import helmet from "helmet";
 import { makeExecutableSchema } from "graphql-tools";
 import { makeExpressCallback } from "./common/express-callback/makeExpressCallback";
 import { PingResolver } from "./common/resolvers/PingResolver";
@@ -22,23 +24,57 @@ const main = async (): Promise<void> => {
   });
   app.use(
     bodyParser.json(),
-    cors({
-      origin: "http://localhost:3000",
-      credentials: true,
-    }),
     session({
       name: "sid",
       secret: "secret",
       cookie: {
-        maxAge: 1000 * 60,
+        maxAge: 1000 * 360,
         sameSite: "none",
         secure: false,
-        httpOnly: true,
+        httpOnly: false,
       },
       resave: false,
       saveUninitialized: false,
     })
   );
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+      maxAge: 10886400,
+    }),
+    helmet.hsts({
+      maxAge: 10886400,
+      includeSubDomains: true,
+      preload: true,
+    }),
+    helmet.frameguard({
+      action: "deny",
+    }),
+    helmet.referrerPolicy({
+      policy: "no-referrer",
+    }),
+    helmet.hidePoweredBy(),
+    helmet.xssFilter(),
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'none'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'"],
+        manifestSrc: ["'self'"],
+        connectSrc: ["'self'"],
+      },
+      loose: false,
+      setAllHeaders: false,
+      reportOnly: true,
+      browserSniff: false,
+    })
+  );
+  app.use(express.static("build"));
+  app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+  });
   app.use(
     "/graphql",
     graphqlHTTP({
