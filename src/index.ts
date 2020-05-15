@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import helmet from "helmet";
 import cors from "cors";
 import session from "express-session";
 import graphqlHTTP from "express-graphql";
@@ -22,10 +23,6 @@ const main = async (): Promise<void> => {
   });
   app.use(
     bodyParser.json(),
-    cors({
-      origin: "http://localhost:3000",
-      credentials: true,
-    }),
     session({
       name: "sid",
       secret: "secret",
@@ -38,6 +35,40 @@ const main = async (): Promise<void> => {
       resave: false,
       saveUninitialized: false,
     })
+  );
+  app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'none'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'"],
+        manifestSrc: ["'self'"],
+        connectSrc: ["'self'"],
+      },
+      loose: false,
+      setAllHeaders: false,
+      reportOnly: true,
+      browserSniff: false,
+    }),
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+      maxAge: 10886400,
+    }),
+    helmet.hsts({
+      maxAge: 10886400,
+      includeSubDomains: true,
+      preload: true,
+    }),
+    helmet.frameguard({
+      action: "deny",
+    }),
+    helmet.referrerPolicy({
+      policy: "no-referrer",
+    }),
+    helmet.hidePoweredBy(),
+    helmet.xssFilter()
   );
   app.use(
     "/graphql",
