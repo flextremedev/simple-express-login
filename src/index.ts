@@ -12,6 +12,7 @@ import { registrationController } from "./user-management/controllers/registrati
 import { logoutController } from "./user-management/controllers/logoutController";
 import { commonSchema } from "./common/schema";
 import { isAuthenticatedController } from "./user-management/controllers/isAuthenticatedController";
+import { getUsersController } from "./user-management/controllers/getUsersController";
 const main = async (): Promise<void> => {
   const app = express();
   const port = 8080;
@@ -81,6 +82,7 @@ const main = async (): Promise<void> => {
   app.post("/register", makeExpressCallback(registrationController));
   app.post("/logout", makeExpressCallback(logoutController));
   app.get("/isAuthenticated", makeExpressCallback(isAuthenticatedController));
+  app.get("/api/users", makeExpressCallback(getUsersController));
 
   app.listen(port, () => {
     console.log(`Server listening on port ${port}...`);

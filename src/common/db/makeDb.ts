@@ -1,8 +1,9 @@
 import { UserEntity } from "../../user-management/entities/User";
+import { Users } from "../../user-management/types/Users";
 
 export type MakeDb = () => Promise<DBClient>;
 type Db = {
-  users: { [key: string]: UserEntity };
+  users: Users;
 };
 const mockDb: Db = {
   users: {
@@ -17,6 +18,7 @@ export type DBClient = {
   users: {
     insertOne: (userEntity: UserEntity) => Promise<UserEntity | undefined>;
     findOne: (username: string) => Promise<UserEntity | undefined>;
+    getAll: () => Promise<Users>;
   };
 };
 const mockDbClient: DBClient = {
@@ -48,6 +50,7 @@ const mockDbClient: DBClient = {
         }
         res(undefined);
       }),
+    getAll: (): Promise<Users> => Promise.resolve(mockDb.users),
   },
 };
 export const makeDb: MakeDb = () => Promise.resolve(mockDbClient);
